@@ -1,0 +1,128 @@
+domain: gestao_manutencao_industrial
+tables:
+  equipamentos:
+    rows: 50
+    columns:
+      id:
+        dtype: int_seq
+        primary_key: true
+      tag_ativo:
+        dtype: str
+        faker_provider: bothify
+      nome_equipamento:
+        dtype: str
+        choices:
+          - Motor Trifásico
+          - Bomba Centrífuga
+          - Compressor de Ar
+          - Painel Elétrico
+          - Chillers
+          - Caldeira
+          - Transformador
+          - Elevador de Carga
+      setor:
+        dtype: str
+        choices:
+          - Produção
+          - Utilidades
+          - Logística
+          - Administrativo
+          - Infraestrutura
+      fabricante:
+        dtype: company
+      data_instalacao:
+        dtype: date
+        min: -10y
+        max: -2y
+      criticidade:
+        dtype: str
+        choices:
+          - A
+          - B
+          - C
+  tecnicos:
+    rows: 20
+    columns:
+      id:
+        dtype: int_seq
+        primary_key: true
+      nome_completo:
+        dtype: name
+      especialidade:
+        dtype: str
+        choices:
+          - Mecânica
+          - Elétrica
+          - Hidráulica
+          - Refrigeração
+          - Automação
+      telefone:
+        dtype: phone
+      email_corporativo:
+        dtype: email
+      nivel_experiencia:
+        dtype: str
+        choices:
+          - Junior
+          - Pleno
+          - Senior
+  ordens_servico:
+    rows: 5000
+    columns:
+      id:
+        dtype: int_seq
+        primary_key: true
+      equipamento_id:
+        dtype: int
+        foreign_key:
+          table: equipamentos
+          column: id
+      tecnico_id:
+        dtype: int
+        foreign_key:
+          table: tecnicos
+          column: id
+      tipo_manutencao:
+        dtype: str
+        choices:
+          - Preventiva
+          - Corretiva
+          - Preditiva
+      prioridade:
+        dtype: str
+        choices:
+          - Baixa
+          - Média
+          - Alta
+          - Emergencial
+      data_abertura:
+        dtype: date
+        min: -2y
+        max: -1m
+      data_conclusao:
+        dtype: date
+        nullable: 0.05
+        min: -1M
+        max: today
+      horas_parada:
+        dtype: float
+        min: 0.5
+        max: 120
+      custo_pecas:
+        dtype: float
+        min: 0
+        max: 15000
+      custo_mao_obra:
+        dtype: float
+        min: 100
+        max: 5000
+      descricao_servico:
+        dtype: text
+        nullable: 0.2
+      status:
+        dtype: str
+        choices:
+          - Finalizada
+          - Em Andamento
+          - Aguardando Peças
+          - Cancelada
