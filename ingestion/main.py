@@ -17,6 +17,7 @@ import logging
 import datetime
 
 import pandas as pd
+from flask import Flask, jsonify
 from google.cloud import bigquery, storage
 
 from bq_schemas import ALL_SCHEMAS
@@ -183,10 +184,25 @@ def main() -> None:
 
     errors = [e for e in all_audit if e["status"] == "ERROR"]
     if errors:
-        log.error("%d table(s) had errors during ingestion.", len(errors))
-        raise SystemExit(1)
+        raise RuntimeError(f"{len(errors)} table(s) had errors during ingestion.")
     log.info("Ingestion complete. %d file(s) processed.", len(all_audit))
 
 
+# ── HTTP server (Cloud Run Service) ──────────────────────────────────────────
+
+app = Flask(__name__)
+
+
+@app.route("/", methods=["POST", "GET"])
+def run():
+    try:
+        main()
+        return jsonify({"status": "ok"}), 200
+    except Exception as exc:
+        log.exception("Ingestion failed: %s", exc)
+        return jsonify({"status": "error", "message": str(exc)}), 500
+
+
 if __name__ == "__main__":
-    main()
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
