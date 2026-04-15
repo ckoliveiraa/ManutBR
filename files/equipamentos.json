@@ -1,0 +1,450 @@
+{
+    "id": 1,
+    "tag_ativo": "33 uo",
+    "nome_equipamento": "Motor Trifásico",
+    "setor": "Utilidades",
+    "fabricante": "Mendoza-Fox",
+    "data_instalacao": "2019-07-10",
+    "criticidade": "C"
+}
+{
+    "id": 2,
+    "tag_ativo": "09 ou",
+    "nome_equipamento": "Transformador",
+    "setor": "Logística",
+    "fabricante": "Harris PLC",
+    "data_instalacao": "2021-11-06",
+    "criticidade": "A"
+}
+{
+    "id": 3,
+    "tag_ativo": "33 mf",
+    "nome_equipamento": "Transformador",
+    "setor": "Produção",
+    "fabricante": "Knight-Cruz",
+    "data_instalacao": "2020-04-15",
+    "criticidade": "B"
+}
+{
+    "id": 4,
+    "tag_ativo": "69 Xx",
+    "nome_equipamento": "Chillers",
+    "setor": "Logística",
+    "fabricante": "Robinson Ltd",
+    "data_instalacao": "2021-01-22",
+    "criticidade": "A"
+}
+{
+    "id": 5,
+    "tag_ativo": "57 FK",
+    "nome_equipamento": "Caldeira",
+    "setor": "Utilidades",
+    "fabricante": "Chang-Sullivan",
+    "data_instalacao": "2016-06-15",
+    "criticidade": "A"
+}
+{
+    "id": 6,
+    "tag_ativo": "84 xV",
+    "nome_equipamento": "Compressor de Ar",
+    "setor": "Administrativo",
+    "fabricante": "Rivera PLC",
+    "data_instalacao": "2017-10-21",
+    "criticidade": "B"
+}
+{
+    "id": 7,
+    "tag_ativo": "69 kD",
+    "nome_equipamento": "Caldeira",
+    "setor": "Utilidades",
+    "fabricante": "Nelson Group",
+    "data_instalacao": "2021-09-09",
+    "criticidade": "A"
+}
+{
+    "id": 8,
+    "tag_ativo": "02 yL",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Infraestrutura",
+    "fabricante": "Brown-Roach",
+    "data_instalacao": "2016-06-01",
+    "criticidade": "B"
+}
+{
+    "id": 9,
+    "tag_ativo": "96 wy",
+    "nome_equipamento": "Caldeira",
+    "setor": "Utilidades",
+    "fabricante": "Lynch, Davidson and Sullivan",
+    "data_instalacao": "2022-05-16",
+    "criticidade": "C"
+}
+{
+    "id": 10,
+    "tag_ativo": "28 au",
+    "nome_equipamento": "Caldeira",
+    "setor": "Logística",
+    "fabricante": "Liu, Smith and Marks",
+    "data_instalacao": "2020-01-16",
+    "criticidade": "C"
+}
+{
+    "id": 11,
+    "tag_ativo": "74 ua",
+    "nome_equipamento": "Motor Trifásico",
+    "setor": "Administrativo",
+    "fabricante": "Porter-Brennan",
+    "data_instalacao": "2019-03-18",
+    "criticidade": "C"
+}
+{
+    "id": 12,
+    "tag_ativo": "20 Cj",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Produção",
+    "fabricante": "Lindsey-Carpenter",
+    "data_instalacao": "2019-06-10",
+    "criticidade": "C"
+}
+{
+    "id": 13,
+    "tag_ativo": "01 mK",
+    "nome_equipamento": "Chillers",
+    "setor": "Produção",
+    "fabricante": "Fry-Wright",
+    "data_instalacao": "2023-07-19",
+    "criticidade": "B"
+}
+{
+    "id": 14,
+    "tag_ativo": "23 SB",
+    "nome_equipamento": "Elevador de Carga",
+    "setor": "Produção",
+    "fabricante": "Smith-Thomas",
+    "data_instalacao": "2017-01-06",
+    "criticidade": "A"
+}
+{
+    "id": 15,
+    "tag_ativo": "58 ka",
+    "nome_equipamento": "Elevador de Carga",
+    "setor": "Logística",
+    "fabricante": "Yu Group",
+    "data_instalacao": "2019-01-02",
+    "criticidade": "A"
+}
+{
+    "id": 16,
+    "tag_ativo": "30 Xe",
+    "nome_equipamento": "Transformador",
+    "setor": "Logística",
+    "fabricante": "Craig-Dickerson",
+    "data_instalacao": "2022-03-31",
+    "criticidade": "C"
+}
+{
+    "id": 17,
+    "tag_ativo": "54 rM",
+    "nome_equipamento": "Motor Trifásico",
+    "setor": "Infraestrutura",
+    "fabricante": "Evans-Ward",
+    "data_instalacao": "2023-08-07",
+    "criticidade": "C"
+}
+{
+    "id": 18,
+    "tag_ativo": "64 jb",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Logística",
+    "fabricante": "Davis PLC",
+    "data_instalacao": "2019-10-23",
+    "criticidade": "B"
+}
+{
+    "id": 19,
+    "tag_ativo": "49 ar",
+    "nome_equipamento": "Elevador de Carga",
+    "setor": "Utilidades",
+    "fabricante": "Ramirez-Soto",
+    "data_instalacao": "2023-11-19",
+    "criticidade": "B"
+}
+{
+    "id": 20,
+    "tag_ativo": "88 Sx",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Administrativo",
+    "fabricante": "Jimenez-Lester",
+    "data_instalacao": "2022-03-30",
+    "criticidade": "B"
+}
+{
+    "id": 21,
+    "tag_ativo": "05 sK",
+    "nome_equipamento": "Motor Trifásico",
+    "setor": "Utilidades",
+    "fabricante": "Smith-Murphy",
+    "data_instalacao": "2019-08-23",
+    "criticidade": "A"
+}
+{
+    "id": 22,
+    "tag_ativo": "74 hk",
+    "nome_equipamento": "Elevador de Carga",
+    "setor": "Administrativo",
+    "fabricante": "Lewis, Garcia and Gray",
+    "data_instalacao": "2019-05-03",
+    "criticidade": "C"
+}
+{
+    "id": 23,
+    "tag_ativo": "73 ZF",
+    "nome_equipamento": "Compressor de Ar",
+    "setor": "Utilidades",
+    "fabricante": "Rios, Alexander and Harper",
+    "data_instalacao": "2023-11-06",
+    "criticidade": "C"
+}
+{
+    "id": 24,
+    "tag_ativo": "21 gn",
+    "nome_equipamento": "Motor Trifásico",
+    "setor": "Utilidades",
+    "fabricante": "Kramer, Campbell and Moran",
+    "data_instalacao": "2022-02-16",
+    "criticidade": "B"
+}
+{
+    "id": 25,
+    "tag_ativo": "85 QW",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Infraestrutura",
+    "fabricante": "Davis and Sons",
+    "data_instalacao": "2024-03-18",
+    "criticidade": "B"
+}
+{
+    "id": 26,
+    "tag_ativo": "75 qZ",
+    "nome_equipamento": "Painel Elétrico",
+    "setor": "Utilidades",
+    "fabricante": "Lopez and Sons",
+    "data_instalacao": "2017-12-08",
+    "criticidade": "C"
+}
+{
+    "id": 27,
+    "tag_ativo": "84 Ai",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Utilidades",
+    "fabricante": "Jackson, Monroe and Phillips",
+    "data_instalacao": "2023-07-31",
+    "criticidade": "B"
+}
+{
+    "id": 28,
+    "tag_ativo": "73 gO",
+    "nome_equipamento": "Painel Elétrico",
+    "setor": "Produção",
+    "fabricante": "Charles Group",
+    "data_instalacao": "2018-01-30",
+    "criticidade": "A"
+}
+{
+    "id": 29,
+    "tag_ativo": "81 MY",
+    "nome_equipamento": "Caldeira",
+    "setor": "Infraestrutura",
+    "fabricante": "Parker-Hernandez",
+    "data_instalacao": "2022-06-24",
+    "criticidade": "B"
+}
+{
+    "id": 30,
+    "tag_ativo": "91 Ea",
+    "nome_equipamento": "Caldeira",
+    "setor": "Utilidades",
+    "fabricante": "Lee Ltd",
+    "data_instalacao": "2023-12-15",
+    "criticidade": "B"
+}
+{
+    "id": 31,
+    "tag_ativo": "39 QY",
+    "nome_equipamento": "Compressor de Ar",
+    "setor": "Administrativo",
+    "fabricante": "Peterson LLC",
+    "data_instalacao": "2021-06-16",
+    "criticidade": "A"
+}
+{
+    "id": 32,
+    "tag_ativo": "51 yv",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Infraestrutura",
+    "fabricante": "Ayers Inc",
+    "data_instalacao": "2020-08-11",
+    "criticidade": "C"
+}
+{
+    "id": 33,
+    "tag_ativo": "33 lV",
+    "nome_equipamento": "Transformador",
+    "setor": "Administrativo",
+    "fabricante": "Brown, Frazier and Becker",
+    "data_instalacao": "2024-01-19",
+    "criticidade": "B"
+}
+{
+    "id": 34,
+    "tag_ativo": "16 wK",
+    "nome_equipamento": "Elevador de Carga",
+    "setor": "Infraestrutura",
+    "fabricante": "Ford-Smith",
+    "data_instalacao": "2023-07-20",
+    "criticidade": "C"
+}
+{
+    "id": 35,
+    "tag_ativo": "35 MT",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Produção",
+    "fabricante": "Meyer, Turner and Charles",
+    "data_instalacao": "2017-01-27",
+    "criticidade": "A"
+}
+{
+    "id": 36,
+    "tag_ativo": "54 sS",
+    "nome_equipamento": "Bomba Centrífuga",
+    "setor": "Logística",
+    "fabricante": "Collins, Evans and Sweeney",
+    "data_instalacao": "2022-07-08",
+    "criticidade": "B"
+}
+{
+    "id": 37,
+    "tag_ativo": "52 cr",
+    "nome_equipamento": "Chillers",
+    "setor": "Infraestrutura",
+    "fabricante": "Anderson-Allen",
+    "data_instalacao": "2018-10-30",
+    "criticidade": "B"
+}
+{
+    "id": 38,
+    "tag_ativo": "18 BM",
+    "nome_equipamento": "Chillers",
+    "setor": "Produção",
+    "fabricante": "Hudson Inc",
+    "data_instalacao": "2019-01-04",
+    "criticidade": "A"
+}
+{
+    "id": 39,
+    "tag_ativo": "79 lk",
+    "nome_equipamento": "Elevador de Carga",
+    "setor": "Administrativo",
+    "fabricante": "Norton, Martinez and Jackson",
+    "data_instalacao": "2023-03-30",
+    "criticidade": "C"
+}
+{
+    "id": 40,
+    "tag_ativo": "20 Gc",
+    "nome_equipamento": "Chillers",
+    "setor": "Infraestrutura",
+    "fabricante": "Jones, Williams and Smith",
+    "data_instalacao": "2018-04-25",
+    "criticidade": "C"
+}
+{
+    "id": 41,
+    "tag_ativo": "16 ps",
+    "nome_equipamento": "Motor Trifásico",
+    "setor": "Infraestrutura",
+    "fabricante": "Middleton-Eaton",
+    "data_instalacao": "2021-11-16",
+    "criticidade": "B"
+}
+{
+    "id": 42,
+    "tag_ativo": "30 cD",
+    "nome_equipamento": "Compressor de Ar",
+    "setor": "Utilidades",
+    "fabricante": "Simon LLC",
+    "data_instalacao": "2021-06-16",
+    "criticidade": "A"
+}
+{
+    "id": 43,
+    "tag_ativo": "95 Fe",
+    "nome_equipamento": "Painel Elétrico",
+    "setor": "Logística",
+    "fabricante": "Stevens-Williams",
+    "data_instalacao": "2023-12-22",
+    "criticidade": "B"
+}
+{
+    "id": 44,
+    "tag_ativo": "97 ty",
+    "nome_equipamento": "Motor Trifásico",
+    "setor": "Logística",
+    "fabricante": "Villanueva-Smith",
+    "data_instalacao": "2020-12-23",
+    "criticidade": "A"
+}
+{
+    "id": 45,
+    "tag_ativo": "37 lg",
+    "nome_equipamento": "Elevador de Carga",
+    "setor": "Produção",
+    "fabricante": "Pacheco and Sons",
+    "data_instalacao": "2021-08-16",
+    "criticidade": "A"
+}
+{
+    "id": 46,
+    "tag_ativo": "93 gl",
+    "nome_equipamento": "Elevador de Carga",
+    "setor": "Logística",
+    "fabricante": "Lee Ltd",
+    "data_instalacao": "2016-07-14",
+    "criticidade": "C"
+}
+{
+    "id": 47,
+    "tag_ativo": "12 cd",
+    "nome_equipamento": "Painel Elétrico",
+    "setor": "Produção",
+    "fabricante": "Boone LLC",
+    "data_instalacao": "2016-12-13",
+    "criticidade": "B"
+}
+{
+    "id": 48,
+    "tag_ativo": "38 Dj",
+    "nome_equipamento": "Painel Elétrico",
+    "setor": "Produção",
+    "fabricante": "Ford LLC",
+    "data_instalacao": "2020-03-16",
+    "criticidade": "C"
+}
+{
+    "id": 49,
+    "tag_ativo": "97 wL",
+    "nome_equipamento": "Compressor de Ar",
+    "setor": "Produção",
+    "fabricante": "Mccoy-Cook",
+    "data_instalacao": "2020-01-29",
+    "criticidade": "B"
+}
+{
+    "id": 50,
+    "tag_ativo": "30 oe",
+    "nome_equipamento": "Chillers",
+    "setor": "Logística",
+    "fabricante": "Garcia, Johnson and Gordon",
+    "data_instalacao": "2020-08-28",
+    "criticidade": "B"
+}
