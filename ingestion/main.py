@@ -97,9 +97,15 @@ def read_gcs_file(blob: storage.Blob) -> pd.DataFrame:
 
 
 def move_to_processed(blob: storage.Blob) -> None:
-    # Preserve folder structure: raw/domain/table/file → processed/domain/table/file
+    # Preserve folder structure and add timestamp to filename:
+    # raw/domain/table/file.json → processed/domain/table/file_20260416T000500.json
     relative_path = blob.name.removeprefix(INPUT_PREFIX)
-    dest_name = f"{PROCESSED_PREFIX}{relative_path}"
+    path_parts = relative_path.rsplit("/", 1)
+    folder = path_parts[0] + "/" if len(path_parts) > 1 else ""
+    filename = path_parts[-1]
+    stem, _, ext = filename.rpartition(".")
+    ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S")
+    dest_name = f"{PROCESSED_PREFIX}{folder}{stem}_{ts}.{ext}"
     bucket.copy_blob(blob, bucket, dest_name)
     blob.delete()
     log.info("Moved %s → %s", blob.name, dest_name)
@@ -136,7 +142,7 @@ def ingest_table(table_name: str, bq_schema: list[bigquery.SchemaField]) -> list
         return []
 
     audit_entries = []
-    run_ts = datetime.datetime.utcnow().isoformat() + "Z"
+    run_ts = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
     for blob in blobs:
         # Skip "folder" placeholder objects
