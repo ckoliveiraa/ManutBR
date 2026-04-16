@@ -31,8 +31,8 @@ DOMAIN = os.environ.get("DOMAIN", "gestao_manutencao_industrial")
 PROJECT = os.environ["GCP_PROJECT"]
 DATASET = os.environ["BQ_DATASET"]
 BUCKET_NAME = os.environ["GCS_BUCKET"]
-INPUT_PREFIX = os.environ.get("GCS_INPUT_PREFIX", "raw/")
-PROCESSED_PREFIX = os.environ.get("GCS_PROCESSED_PREFIX", "processed/")
+INPUT_PREFIX = os.environ.get("GCS_INPUT_PREFIX", "raw/").rstrip("/") + "/"
+PROCESSED_PREFIX = os.environ.get("GCS_PROCESSED_PREFIX", "processed/").rstrip("/") + "/"
 # Sub-folder between the input prefix and the table name, e.g.:
 #   raw/gestao_manutencao_industrial/equipamentos/
 INPUT_DOMAIN_FOLDER = os.environ.get("GCS_INPUT_DOMAIN_FOLDER", DOMAIN)
@@ -72,6 +72,14 @@ def ensure_table(table_id: str, schema: list[bigquery.SchemaField]) -> None:
 
 def ensure_audit_table() -> None:
     ensure_table(AUDIT_TABLE_ID, AUDIT_SCHEMA)
+
+
+def cast_date_columns(df: pd.DataFrame, bq_schema: list[bigquery.SchemaField]) -> pd.DataFrame:
+    date_cols = [f.name for f in bq_schema if f.field_type == "DATE"]
+    for col in date_cols:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], errors="coerce").dt.date
+    return df
 
 
 def read_gcs_file(blob: storage.Blob) -> pd.DataFrame:
@@ -138,6 +146,7 @@ def ingest_table(table_name: str, bq_schema: list[bigquery.SchemaField]) -> list
         log.info("Ingesting %s → %s", source_file, table_id)
         try:
             df = read_gcs_file(blob)
+            df = cast_date_columns(df, bq_schema)
             rows = append_to_bq(table_id, df)
             move_to_processed(blob)
             audit_entries.append(
