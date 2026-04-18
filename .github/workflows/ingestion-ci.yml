@@ -1,0 +1,71 @@
+name: Ingestion CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "ingestion/**"
+      - ".github/workflows/ingestion-ci.yml"
+  push:
+    branches:
+      - feature/develop
+      - main
+    paths:
+      - "ingestion/**"
+      - ".github/workflows/ingestion-ci.yml"
+
+env:
+  IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/manutbr-ingestion
+
+jobs:
+  validate:
+    name: Lint & test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r ingestion/requirements.txt ruff
+
+      - name: Lint (ruff)
+        run: ruff check ingestion/
+
+      - name: Build Docker image (validate only)
+        run: docker build -t manutbr-ingestion:pr-test ingestion/
+
+  deploy-prod:
+    name: Build & deploy (prod)
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker gcr.io --quiet
+
+      - name: Build & push image
+        run: |
+          docker build -t $IMAGE:$GITHUB_SHA ingestion/
+          docker push $IMAGE:$GITHUB_SHA
+          docker tag $IMAGE:$GITHUB_SHA $IMAGE:latest
+          docker push $IMAGE:latest
+
+      - uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ secrets.CLOUD_RUN_SERVICE }}
+          region: ${{ secrets.CLOUD_RUN_REGION }}
+          image: ${{ env.IMAGE }}:${{ github.sha }}
