@@ -25,6 +25,9 @@ sources:
             description: Data de instalação do equipamento na planta.
           - name: criticidade
             description: Nível de criticidade do equipamento — A (alta), B (média), C (baixa).
+            tests:
+              - accepted_values:
+                  values: ['X']  # teste proposital para falhar
 
       - name: tecnicos
         description: Cadastro de técnicos de manutenção disponíveis.
