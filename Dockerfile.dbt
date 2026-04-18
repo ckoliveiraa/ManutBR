@@ -1,0 +1,27 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install dbt dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy dbt project
+COPY ManutBR/ ./ManutBR/
+
+# Create profiles dir and copy production profile
+RUN mkdir -p /root/.dbt
+COPY profiles/profiles.yml /root/.dbt/profiles.yml
+
+WORKDIR /app/ManutBR
+
+# Install dbt packages (if packages.yml exists)
+RUN if [ -f packages.yml ]; then dbt deps; fi
+
+# Default: run all models. Override via Cloud Run Job args.
+# Examples:
+#   dbt run --select staging
+#   dbt test
+#   dbt build
+ENTRYPOINT ["dbt"]
+CMD ["build", "--profiles-dir", "/root/.dbt", "--project-dir", "/app/ManutBR"]

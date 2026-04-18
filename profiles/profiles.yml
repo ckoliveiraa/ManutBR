@@ -1,0 +1,13 @@
+ManutBR:
+  target: prod
+  outputs:
+    prod:
+      type: bigquery
+      method: oauth              # usa ADC — service account vinculada ao Cloud Run
+      project: "{{ env_var('DBT_PROJECT') }}"
+      dataset: "{{ env_var('DBT_DATASET') }}"
+      location: US
+      threads: 8
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1
