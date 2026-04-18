@@ -76,9 +76,9 @@ Dados de manutenção ficam fragmentados em sistemas operacionais sem visibilida
 
 | Camada | Responsável | Dataset BQ | Responsabilidade |
 |--------|------------|-----------|-----------------|
-| **Staging** | Cloud Run | `manutbr_raw` | Ingestão GCS → BQ; dados limpos e tipados na chegada |
-| **Intermediate** | dbt | `manutbr_intermediate` | Joins, enriquecimento e regras de negócio entre entidades |
-| **Marts** | dbt | `manutbr_marts` | Modelos analíticos agregados, prontos para consumo de BI |
+| **Staging** | Cloud Run | `staging` | Ingestão GCS → BQ; dados limpos e tipados na chegada |
+| **Intermediate** | dbt | `intermediate` | Joins, enriquecimento e regras de negócio entre entidades |
+| **Marts** | dbt | `marts` | Modelos analíticos agregados, prontos para consumo de BI |
 
 ### Fluxo de dados
 
