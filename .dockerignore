@@ -1,0 +1,11 @@
+**/.git
+**/__pycache__
+**/*.pyc
+ManutBR/target/
+ManutBR/dbt_packages/
+ManutBR/logs/
+ingestion/
+docs/
+files/
+.github/
+*.md
