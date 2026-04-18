@@ -9,10 +9,6 @@ on:
       - ".github/workflows/dbt-ci.yml"
   push:
     branches: [main]
-    paths:
-      - "ManutBR/**"
-      - "requirements.txt"
-      - ".github/workflows/dbt-ci.yml"
 
 env:
   DBT_PROJECT_DIR: ManutBR
@@ -60,20 +56,16 @@ jobs:
           EOF
 
       - name: dbt debug
-        working-directory: ${{ env.DBT_PROJECT_DIR }}
-        run: dbt debug --profiles-dir ../.dbt
+        run: dbt debug --project-dir ${{ env.DBT_PROJECT_DIR }} --profiles-dir .dbt
 
       - name: dbt deps
-        working-directory: ${{ env.DBT_PROJECT_DIR }}
-        run: dbt deps --profiles-dir ../.dbt
+        run: dbt deps --project-dir ${{ env.DBT_PROJECT_DIR }} --profiles-dir .dbt
 
       - name: dbt compile
-        working-directory: ${{ env.DBT_PROJECT_DIR }}
-        run: dbt compile --profiles-dir ../.dbt
+        run: dbt compile --project-dir ${{ env.DBT_PROJECT_DIR }} --profiles-dir .dbt
 
       - name: dbt build (models + tests)
-        working-directory: ${{ env.DBT_PROJECT_DIR }}
-        run: dbt build --profiles-dir ../.dbt --target ci
+        run: dbt build --project-dir ${{ env.DBT_PROJECT_DIR }} --profiles-dir .dbt --target ci
 
       - name: Upload dbt artifacts
         if: always()
