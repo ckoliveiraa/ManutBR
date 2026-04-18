@@ -1,0 +1,79 @@
+version: 2
+
+models:
+  - name: fct_facilities_custos
+    description: Custos de manutenção agregados por setor, mês e tipo de manutenção.
+    columns:
+      - name: setor
+        description: Setor do equipamento.
+        tests: [not_null]
+      - name: ano_mes
+        description: Primeiro dia do mês de abertura da OS (date_trunc month).
+        tests: [not_null]
+      - name: tipo_manutencao
+        description: Tipo de manutenção.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Preventiva', 'Corretiva', 'Preditiva']
+      - name: total_os
+        description: Quantidade de OS no período/setor/tipo.
+      - name: custo_pecas_total
+        description: Soma dos custos de peças em R$.
+      - name: custo_mao_obra_total
+        description: Soma dos custos de mão de obra em R$.
+      - name: custo_total
+        description: Soma de custo_pecas_total + custo_mao_obra_total.
+      - name: custo_medio_por_os
+        description: Custo total médio por ordem de serviço.
+
+  - name: fct_equipamentos_parada
+    description: Métricas de parada e recorrência por equipamento, ordenadas por horas de parada.
+    columns:
+      - name: equipamento_id
+        description: Identificador único do equipamento.
+        tests: [unique, not_null]
+      - name: tag_ativo
+        description: Tag de identificação do ativo.
+      - name: nome_equipamento
+        description: Nome do equipamento.
+      - name: setor
+        description: Setor do equipamento.
+      - name: criticidade
+        description: Criticidade do equipamento.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['A', 'B', 'C']
+      - name: total_os
+        description: Total de OS abertas para o equipamento.
+      - name: total_os_corretivas
+        description: Total de OS corretivas.
+      - name: horas_parada_total
+        description: Soma total de horas de parada.
+      - name: mttr
+        description: Mean Time to Repair em horas (OS Finalizadas).
+      - name: taxa_recorrencia
+        description: Proporção de OS Corretivas sobre total de OS.
+
+  - name: fct_tecnicos_performance
+    description: Performance de técnicos — OS concluídas, custo de mão de obra e tempo médio de atendimento.
+    columns:
+      - name: tecnico_id
+        description: Identificador único do técnico.
+        tests: [unique, not_null]
+      - name: nome_completo
+        description: Nome completo do técnico.
+      - name: especialidade
+        description: Especialidade do técnico.
+      - name: nivel_experiencia
+        description: Nível de experiência (Junior, Pleno, Senior).
+      - name: total_os_concluidas
+        description: Quantidade de OS com status Finalizada.
+      - name: custo_mao_obra_total
+        description: Soma dos custos de mão de obra em R$.
+      - name: custo_mao_obra_medio
+        description: Custo médio de mão de obra por OS.
+      - name: tempo_medio_atendimento
+        description: Média de horas_parada nas OS atendidas pelo técnico.

@@ -1,0 +1,83 @@
+version: 2
+
+sources:
+  - name: staging
+    description: >
+      Tabelas brutas do sistema de Gestão de Manutenção Industrial,
+      carregadas pelo Cloud Run diretamente no dataset staging do BigQuery.
+    schema: staging
+    tables:
+      - name: equipamentos
+        description: Cadastro de equipamentos industriais monitorados.
+        columns:
+          - name: id
+            description: Identificador único do equipamento.
+            tests: [unique, not_null]
+          - name: tag_ativo
+            description: Tag de identificação física do ativo (ex. EQ-0042).
+          - name: nome_equipamento
+            description: Nome do tipo de equipamento (ex. Motor Trifásico, Bomba Centrífuga).
+          - name: setor
+            description: Setor da planta ao qual o equipamento pertence (Produção, Utilidades, Logística, Administrativo, Infraestrutura).
+          - name: fabricante
+            description: Nome do fabricante do equipamento.
+          - name: data_instalacao
+            description: Data de instalação do equipamento na planta.
+          - name: criticidade
+            description: Nível de criticidade do equipamento — A (alta), B (média), C (baixa).
+
+      - name: tecnicos
+        description: Cadastro de técnicos de manutenção disponíveis.
+        columns:
+          - name: id
+            description: Identificador único do técnico.
+            tests: [unique, not_null]
+          - name: nome_completo
+            description: Nome completo do técnico.
+          - name: especialidade
+            description: Área de especialidade do técnico (Mecânica, Elétrica, Hidráulica, Refrigeração, Automação).
+          - name: telefone
+            description: Telefone de contato do técnico.
+          - name: email_corporativo
+            description: E-mail corporativo do técnico.
+          - name: nivel_experiencia
+            description: Nível de experiência do técnico — Junior, Pleno ou Senior.
+
+      - name: ordens_servico
+        description: Ordens de serviço de manutenção abertas para equipamentos da planta.
+        columns:
+          - name: id
+            description: Identificador único da ordem de serviço.
+            tests: [unique, not_null]
+          - name: equipamento_id
+            description: FK para equipamentos — equipamento alvo da OS.
+            tests:
+              - not_null
+              - relationships:
+                  to: source('staging', 'equipamentos')
+                  field: id
+          - name: tecnico_id
+            description: FK para tecnicos — técnico responsável pela OS.
+            tests:
+              - not_null
+              - relationships:
+                  to: source('staging', 'tecnicos')
+                  field: id
+          - name: tipo_manutencao
+            description: Tipo de manutenção executada — Preventiva, Corretiva ou Preditiva.
+          - name: prioridade
+            description: Prioridade da OS — Baixa, Média, Alta ou Emergencial.
+          - name: data_abertura
+            description: Data em que a OS foi aberta.
+          - name: data_conclusao
+            description: Data de conclusão da OS. Nulo se ainda não finalizada (≈5% dos registros).
+          - name: horas_parada
+            description: Horas de parada do equipamento durante a execução da OS.
+          - name: custo_pecas
+            description: Custo com peças e materiais em R$.
+          - name: custo_mao_obra
+            description: Custo com mão de obra em R$.
+          - name: descricao_servico
+            description: Descrição textual do serviço executado. Nulo em ≈20% dos registros.
+          - name: status
+            description: Status atual da OS — Finalizada, Em Andamento, Aguardando Peças ou Cancelada.
