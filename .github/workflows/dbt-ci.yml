@@ -1,0 +1,107 @@
+name: dbt CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "ManutBR/**"
+      - "requirements.txt"
+      - ".github/workflows/dbt-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "ManutBR/**"
+      - "requirements.txt"
+      - ".github/workflows/dbt-ci.yml"
+
+env:
+  DBT_PROJECT_DIR: ManutBR
+  DBT_PROFILES_DIR: .dbt
+
+jobs:
+  dbt-ci:
+    name: dbt lint, compile & test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write dbt profiles
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+        run: |
+          mkdir -p .dbt
+          cat > .dbt/profiles.yml <<EOF
+          ManutBR:
+            target: ci
+            outputs:
+              ci:
+                type: bigquery
+                method: service-account-json
+                project: ${GCP_PROJECT_ID}
+                dataset: ci_${GITHUB_SHA::7}
+                location: US
+                threads: 4
+                timeout_seconds: 300
+                retries: 1
+                priority: interactive
+                keyfile_json: $(echo "$GCP_SERVICE_ACCOUNT_JSON" | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin)))")
+          EOF
+
+      - name: dbt debug
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt debug --profiles-dir ../.dbt
+
+      - name: dbt deps
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt deps --profiles-dir ../.dbt
+
+      - name: dbt compile
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt compile --profiles-dir ../.dbt
+
+      - name: dbt build (models + tests)
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt build --profiles-dir ../.dbt --target ci
+
+      - name: Upload dbt artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-artifacts
+          path: |
+            ${{ env.DBT_PROJECT_DIR }}/target/manifest.json
+            ${{ env.DBT_PROJECT_DIR }}/target/run_results.json
+          retention-days: 7
+
+      - name: Drop CI dataset
+        if: always()
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+        run: |
+          echo "$GCP_SERVICE_ACCOUNT_JSON" > /tmp/sa.json
+          pip install google-cloud-bigquery --quiet
+          python3 - <<EOF
+          from google.cloud import bigquery
+          from google.oauth2 import service_account
+          import json, os
+
+          sa = json.loads(open("/tmp/sa.json").read())
+          creds = service_account.Credentials.from_service_account_info(sa)
+          client = bigquery.Client(project=os.environ["GCP_PROJECT_ID"], credentials=creds)
+          dataset_id = f"{os.environ['GCP_PROJECT_ID']}.ci_${GITHUB_SHA::7}"
+          client.delete_dataset(dataset_id, delete_contents=True, not_found_ok=True)
+          print(f"Dropped dataset: {dataset_id}")
+          EOF
