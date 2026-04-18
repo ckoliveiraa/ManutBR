@@ -3,18 +3,10 @@ name: dbt CI
 on:
   pull_request:
     branches: [main]
-    paths:
-      - "ManutBR/**"
-      - "requirements.txt"
-      - ".github/workflows/dbt-ci.yml"
   push:
     branches:
       - feature/develop
       - main
-    paths:
-      - "ManutBR/**"
-      - "requirements.txt"
-      - ".github/workflows/dbt-ci.yml"
 
 env:
   DBT_PROJECT_DIR: ManutBR
