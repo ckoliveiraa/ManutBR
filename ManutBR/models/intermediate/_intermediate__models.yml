@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: int_ordens_servico_enriched
+    description: >
+      Ordem de serviço enriquecida com atributos de equipamento e técnico.
+      Uma linha por OS, sem agregação — base para todos os marts.
+    columns:
+      - name: id
+        description: Identificador único da ordem de serviço.
+      - name: equipamento_id
+        description: FK para equipamentos.
+      - name: tecnico_id
+        description: FK para técnicos.
+      - name: tipo_manutencao
+        description: Preventiva, Corretiva ou Preditiva.
+      - name: prioridade
+        description: Baixa, Média, Alta ou Emergencial.
+      - name: data_abertura
+        description: Data de abertura da OS.
+      - name: data_conclusao
+        description: Data de conclusão da OS (pode ser nula).
+      - name: horas_parada
+        description: Horas de parada do equipamento.
+      - name: custo_pecas
+        description: Custo com peças em R$.
+      - name: custo_mao_obra
+        description: Custo com mão de obra em R$.
+      - name: descricao_servico
+        description: Descrição textual do serviço (pode ser nula).
+      - name: status
+        description: Finalizada, Em Andamento, Aguardando Peças ou Cancelada.
+      - name: nome_equipamento
+        description: Nome do equipamento associado.
+      - name: setor
+        description: Setor do equipamento.
+      - name: criticidade
+        description: Criticidade do equipamento (A, B ou C).
+      - name: tag_ativo
+        description: Tag de identificação do ativo.
+      - name: nome_completo
+        description: Nome completo do técnico responsável.
+      - name: especialidade
+        description: Especialidade do técnico.
+      - name: nivel_experiencia
+        description: Nível de experiência do técnico (Junior, Pleno, Senior).
+
+  - name: int_equipamentos_parada
+    description: >
+      Agrega métricas de parada por equipamento.
+      MTTR calculado apenas sobre OS com status Finalizada.
+    columns:
+      - name: equipamento_id
+        description: Identificador do equipamento.
+      - name: total_os
+        description: Total de ordens de serviço abertas para o equipamento.
+      - name: total_os_corretivas
+        description: Total de OS do tipo Corretiva.
+      - name: horas_parada_total
+        description: Soma total de horas de parada do equipamento.
+      - name: mttr
+        description: Mean Time to Repair — média de horas_parada em OS Finalizadas.
+      - name: taxa_recorrencia
+        description: Proporção de OS Corretivas sobre o total de OS.
