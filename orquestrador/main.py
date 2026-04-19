@@ -12,6 +12,7 @@ import logging
 import os
 
 import functions_framework
+import urllib.request
 from google.api_core import exceptions as gax
 from google.cloud import tasks_v2
 from google.protobuf import duration_pb2, timestamp_pb2
@@ -19,12 +20,22 @@ from google.protobuf import duration_pb2, timestamp_pb2
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
+
+def _runtime_service_account() -> str:
+    req = urllib.request.Request(
+        "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/email",
+        headers={"Metadata-Flavor": "Google"},
+    )
+    with urllib.request.urlopen(req, timeout=2) as resp:
+        return resp.read().decode().strip()
+
+
 PROJECT = os.environ["GCP_PROJECT"]
 LOCATION = os.environ.get("TASKS_LOCATION", "us-central1")
 QUEUE = os.environ.get("TASKS_QUEUE", "ingestion-queue")
 WORKFLOW = os.environ.get("WORKFLOW_NAME", "manutbr-pipeline")
-SERVICE_ACCOUNT = os.environ["INVOKER_SA"]
-WINDOW_SECONDS = int(os.environ.get("WINDOW_SECONDS", "120"))
+SERVICE_ACCOUNT = _runtime_service_account()
+WINDOW_SECONDS = int(os.environ.get("WINDOW_SECONDS", "30"))
 WATCH_PREFIX = os.environ.get("WATCH_PREFIX", "raw/gestao_manutencao_industrial/")
 
 _client = tasks_v2.CloudTasksClient()
