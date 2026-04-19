@@ -1,0 +1,27 @@
+main:
+  steps:
+    - vars:
+        assign:
+          - ingestion_url: "https://ingestion-manutbr-936383324529.us-central1.run.app"
+          - job_name: "projects/manutbr/locations/us-central1/jobs/tansform-manutbr-dbt-job"
+
+    - ingest:
+        call: http.post
+        args:
+          url: ${ingestion_url}
+          timeout: 1800
+          auth:
+            type: OIDC
+            audience: ${ingestion_url}
+        result: ingest_result
+
+    - run_dbt:
+        call: googleapis.run.v2.projects.locations.jobs.run
+        args:
+          name: ${job_name}
+        result: job_result
+
+    - done:
+        return:
+          ingest: ${ingest_result.body}
+          dbt: ${job_result.name}
