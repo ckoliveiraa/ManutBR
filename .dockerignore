@@ -1,0 +1,39 @@
+# dbt artifacts (qualquer projeto)
+**/target/
+**/dbt_packages/
+**/dbt_modules/
+**/logs/
+
+# Arquivos do orquestrador (nao entram na imagem; manter requirements.txt e profiles.yml)
+deploy/deploy.py
+deploy/teardown.py
+deploy/cloudbuild.yaml
+deploy/.env
+deploy/.env.example
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Ambiente e segredos
+.env
+*.json.key
+
+# IDE e SO
+.vscode/
+.history/
+.claude/
+
+# Git
+.git/
+.gitignore
+
+# Docs e arquivos locais
+docs/
+files/
+*.md

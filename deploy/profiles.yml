@@ -1,0 +1,14 @@
+# IMPORTANTE: a chave abaixo (nome do profile) precisa ser IDENTICA ao
+# valor de `profile:` em <DBT_PROJECT_DIR>/dbt_project.yml. Se renomear
+# aqui, renomeie la tambem -- senao o dbt nao acha as credenciais.
+ManutBR:
+  target: prod
+  outputs:
+    prod:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('GCP_PROJECT_ID') }}"
+      dataset: "{{ env_var('BQ_DATASET') }}"
+      location: "{{ env_var('BQ_LOCATION', 'US') }}"
+      threads: "{{ env_var('DBT_THREADS', '8') | int }}"
+      timeout_seconds: 300

@@ -1,0 +1,13 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'deploy/Dockerfile'
+      - '--build-arg'
+      - 'DBT_PROJECT_DIR=${_DBT_PROJECT_DIR}'
+      - '-t'
+      - '${_IMAGE_URI}'
+      - '.'
+images:
+  - '${_IMAGE_URI}'
