@@ -83,17 +83,14 @@ def cast_date_columns(df: pd.DataFrame, bq_schema: list[bigquery.SchemaField]) -
 
 
 def read_gcs_file(blob: storage.Blob) -> pd.DataFrame:
-    data = blob.download_as_bytes()
     name = blob.name.lower()
-    if name.endswith(".parquet"):
-        return pd.read_parquet(io.BytesIO(data))
-    elif name.endswith(".csv"):
-        return pd.read_csv(io.BytesIO(data))
-    elif name.endswith(".json") or name.endswith(".ndjson"):
-        # NDJSON: one JSON object per line (not a JSON array)
-        return pd.read_json(io.BytesIO(data), lines=True)
-    else:
-        raise ValueError(f"Unsupported file format: {blob.name}")
+    if not (name.endswith(".json") or name.endswith(".ndjson")):
+        raise ValueError(
+            f"Formato nao suportado: {blob.name}. "
+            f"A ingestao espera arquivos JSON (NDJSON: um objeto JSON por linha)."
+        )
+    data = blob.download_as_bytes()
+    return pd.read_json(io.BytesIO(data), lines=True)
 
 
 def move_to_processed(blob: storage.Blob) -> None:
