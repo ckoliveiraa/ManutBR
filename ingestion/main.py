@@ -87,10 +87,14 @@ def read_gcs_file(blob: storage.Blob) -> pd.DataFrame:
     if not (name.endswith(".json") or name.endswith(".ndjson")):
         raise ValueError(
             f"Formato nao suportado: {blob.name}. "
-            f"A ingestao espera arquivos JSON (NDJSON: um objeto JSON por linha)."
+            f"A ingestao espera arquivos JSON (array de objetos ou NDJSON)."
         )
     data = blob.download_as_bytes()
-    return pd.read_json(io.BytesIO(data), lines=True)
+    text = data.decode("utf-8").strip()
+    if not text:
+        raise ValueError(f"Arquivo vazio: {blob.name}")
+    is_ndjson = text.startswith("{")
+    return pd.read_json(io.BytesIO(data), lines=is_ndjson)
 
 
 def move_to_processed(blob: storage.Blob) -> None:
