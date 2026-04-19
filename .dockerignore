@@ -1,0 +1,32 @@
+# dbt artifacts
+ManutBR/target/
+ManutBR/dbt_packages/
+ManutBR/dbt_modules/
+ManutBR/logs/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Ambiente e segredos
+.env
+*.json.key
+
+# IDE e SO
+.vscode/
+.history/
+.claude/
+
+# Git
+.git/
+.gitignore
+
+# Docs e arquivos locais
+docs/
+files/
+*.md
