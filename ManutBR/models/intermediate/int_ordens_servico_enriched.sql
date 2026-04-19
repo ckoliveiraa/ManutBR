@@ -1,14 +1,28 @@
 with ordens_servico as (
-    select * from {{ source('staging', 'ordens_servico') }}
+    select *
+    from {{ source('staging', 'ordens_servico') }}
+    qualify row_number() over (
+        partition by id
+        order by data_abertura desc, data_conclusao desc nulls last
+    ) = 1
 ),
 
 equipamentos as (
-    select * from {{ source('staging', 'equipamentos') }}
+    select *
+    from {{ source('staging', 'equipamentos') }}
+    qualify row_number() over (
+        partition by id
+        order by data_instalacao desc nulls last
+    ) = 1
 ),
 
 tecnicos as (
-    select * from {{ source('staging', 'tecnicos') }}
-
+    select *
+    from {{ source('staging', 'tecnicos') }}
+    qualify row_number() over (
+        partition by id
+        order by id
+    ) = 1
 )
 
 select
