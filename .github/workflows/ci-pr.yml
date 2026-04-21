@@ -20,7 +20,7 @@ jobs:
             ingestion:
               - 'ingestion/**'
             dbt:
-              - 'manutbr/**'
+              - 'ManutBR/**'
               - 'deploy/**'
             orquestrador:
               - 'orquestrador/**'
@@ -48,7 +48,7 @@ jobs:
           python-version: '3.12'
       - run: pip install dbt-bigquery
       - name: dbt parse
-        working-directory: manutbr
+        working-directory: ManutBR
         env:
           DBT_PROFILES_DIR: ${{ github.workspace }}/.github/dbt-ci
           GCP_PROJECT_ID: ci-dummy

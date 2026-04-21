@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'manutbr/**'
+      - 'ManutBR/**'
       - 'deploy/**'
       - '.github/workflows/deploy-dbt.yml'
 
