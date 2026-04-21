@@ -28,6 +28,19 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@v2
 
+      - name: Enable required GCP APIs
+        run: |
+          gcloud services enable \
+            cloudfunctions.googleapis.com \
+            cloudbuild.googleapis.com \
+            run.googleapis.com \
+            artifactregistry.googleapis.com \
+            eventarc.googleapis.com \
+            pubsub.googleapis.com \
+            workflows.googleapis.com \
+            cloudtasks.googleapis.com \
+            --project="${{ secrets.GCP_PROJECT_ID }}"
+
       - name: Deploy Cloud Workflow
         if: hashFiles('orquestrador/workflow.yaml') != ''
         run: |

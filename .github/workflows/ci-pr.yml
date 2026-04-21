@@ -69,3 +69,15 @@ jobs:
       - name: Build dbt image (dry)
         if: needs.changes.outputs.dbt == 'true'
         run: docker build -f deploy/Dockerfile --build-arg DBT_PROJECT_DIR=ManutBR -t manutbr-dbt:pr .
+
+  ci-gate:
+    needs: [lint-python, dbt-parse, docker-build]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any required check failed
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "Um ou mais checks falharam"; exit 1
+          fi
+          echo "OK"

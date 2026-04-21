@@ -12,15 +12,21 @@ concurrency:
   group: deploy-dbt
   cancel-in-progress: false
 
+env:
+  GCP_REGION: us-central1
+  BQ_LOCATION: US
+  DBT_THREADS: '8'
+  DBT_PROJECT_DIR: ManutBR
+  ARTIFACT_REPO: manutbr
+  IMAGE_NAME: manutbr-dbt
+  JOB_NAME: manutbr-dbt-job
+  SERVICE_ACCOUNT_NAME: dbt-runner
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
 
       - uses: google-github-actions/auth@v2
         with:
@@ -28,20 +34,53 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@v2
 
-      - name: Write deploy/.env
+      - name: Enable required GCP APIs
         run: |
-          cat > deploy/.env <<EOF
-          GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
-          BQ_DATASET=${{ vars.BQ_DATASET || 'staging' }}
-          GCP_REGION=us-central1
-          BQ_LOCATION=US
-          DBT_THREADS=8
-          DBT_PROJECT_DIR=ManutBR
-          ARTIFACT_REPO=manutbr
-          IMAGE_NAME=manutbr-dbt
-          JOB_NAME=manutbr-dbt-job
-          SERVICE_ACCOUNT_NAME=dbt-runner
-          EOF
+          gcloud services enable \
+            artifactregistry.googleapis.com \
+            run.googleapis.com \
+            cloudbuild.googleapis.com \
+            bigquery.googleapis.com \
+            iam.googleapis.com \
+            --project="${{ secrets.GCP_PROJECT_ID }}"
 
-      - name: Run deploy.py
-        run: python deploy/deploy.py --tag "${{ github.sha }}"
+      - name: Ensure Artifact Registry repo
+        run: |
+          if ! gcloud artifacts repositories describe "$ARTIFACT_REPO" \
+                --location="$GCP_REGION" --project="${{ secrets.GCP_PROJECT_ID }}" >/dev/null 2>&1; then
+            gcloud artifacts repositories create "$ARTIFACT_REPO" \
+              --repository-format=docker \
+              --location="$GCP_REGION" \
+              --description="Imagens dbt ManutBR" \
+              --project="${{ secrets.GCP_PROJECT_ID }}"
+          fi
+
+      - name: Build and push image (Cloud Build)
+        run: |
+          IMAGE_URI="$GCP_REGION-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/$ARTIFACT_REPO/$IMAGE_NAME:${{ github.sha }}"
+          gcloud builds submit . \
+            --config=deploy/cloudbuild.yaml \
+            --substitutions="_DBT_PROJECT_DIR=$DBT_PROJECT_DIR,_IMAGE_URI=$IMAGE_URI" \
+            --project="${{ secrets.GCP_PROJECT_ID }}"
+          echo "IMAGE_URI=$IMAGE_URI" >> "$GITHUB_ENV"
+
+      - name: Deploy Cloud Run Job
+        run: |
+          SA_EMAIL="$SERVICE_ACCOUNT_NAME@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com"
+          ENV_VARS="GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},BQ_DATASET=${{ vars.BQ_DATASET || 'staging' }},BQ_LOCATION=$BQ_LOCATION,DBT_THREADS=$DBT_THREADS"
+          if gcloud run jobs describe "$JOB_NAME" \
+                --region="$GCP_REGION" --project="${{ secrets.GCP_PROJECT_ID }}" >/dev/null 2>&1; then
+            VERB=update
+          else
+            VERB=create
+          fi
+          gcloud run jobs $VERB "$JOB_NAME" \
+            --image="$IMAGE_URI" \
+            --region="$GCP_REGION" \
+            --project="${{ secrets.GCP_PROJECT_ID }}" \
+            --set-env-vars="$ENV_VARS" \
+            --service-account="$SA_EMAIL" \
+            --task-timeout=3600 \
+            --memory=2Gi \
+            --cpu=2 \
+            --max-retries=1
