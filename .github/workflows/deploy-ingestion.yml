@@ -1,0 +1,46 @@
+name: Deploy ingestion (Cloud Run)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ingestion/**'
+      - '.github/workflows/deploy-ingestion.yml'
+
+concurrency:
+  group: deploy-ingestion
+  cancel-in-progress: false
+
+env:
+  GCP_REGION: us-central1
+  SERVICE_NAME: ingestion-manutbr
+  ARTIFACT_REPO: manutbr
+  IMAGE_NAME: ingestion-manutbr
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build & push image
+        run: |
+          IMAGE_URI="${GCP_REGION}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ARTIFACT_REPO}/${IMAGE_NAME}:${{ github.sha }}"
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+          gcloud builds submit ingestion \
+            --tag="$IMAGE_URI" \
+            --project="${{ secrets.GCP_PROJECT_ID }}"
+
+      - name: Deploy Cloud Run service
+        run: |
+          gcloud run deploy "$SERVICE_NAME" \
+            --image="$IMAGE_URI" \
+            --region="$GCP_REGION" \
+            --platform=managed \
+            --project="${{ secrets.GCP_PROJECT_ID }}"
