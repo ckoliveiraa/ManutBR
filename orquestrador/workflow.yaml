@@ -3,7 +3,7 @@ main:
     - vars:
         assign:
           - ingestion_url: "https://ingestion-manutbr-936383324529.us-central1.run.app"
-          - job_name: "projects/manutbr/locations/us-central1/jobs/tansform-manutbr-dbt-job"
+          - job_name: "projects/manutbr/locations/us-central1/jobs/manutbr-dbt-job"
 
     - ingest:
         call: http.post
