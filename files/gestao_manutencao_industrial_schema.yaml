@@ -126,3 +126,15 @@ tables:
           - Em Andamento
           - Aguardando Peças
           - Cancelada
+  tipo_manutencao:
+    rows: 3
+    columns:
+      id_tipo:
+        dtype: str
+        primary_key: true
+      tipo_manutencao:
+        dtype: str
+        choices:
+          - Corretiva
+          - Preventiva
+          - Preditiva

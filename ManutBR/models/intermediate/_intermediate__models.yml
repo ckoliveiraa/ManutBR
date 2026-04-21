@@ -45,6 +45,16 @@ models:
       - name: nivel_experiencia
         description: Nível de experiência do técnico (Junior, Pleno, Senior).
 
+  - name: int_tipo_manutencao
+    description: >
+      Passagem direta da tabela tipo_manutencao da staging para a camada
+      intermediate, sem edições.
+    columns:
+      - name: id_tipo
+        description: Identificador do tipo de manutenção.
+      - name: tipo_manutencao
+        description: Corretiva, Preventiva ou Preditiva.
+
   - name: int_equipamentos_parada
     description: >
       Agrega métricas de parada por equipamento.

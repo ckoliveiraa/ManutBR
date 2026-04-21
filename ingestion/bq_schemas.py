@@ -49,9 +49,18 @@ class OrdensServicoSchema:
     ]
 
 
+class TipoManutencaoSchema:
+    TABLE_NAME = "tipo_manutencao"
+    FIELDS = [
+        bigquery.SchemaField("id_tipo",         "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("tipo_manutencao", "STRING", mode="REQUIRED"),
+    ]
+
+
 # Registry — used by main.py to iterate over all tables
 ALL_SCHEMAS = [
     EquipamentosSchema,
     TecnicosSchema,
     OrdensServicoSchema,
+    TipoManutencaoSchema,
 ]

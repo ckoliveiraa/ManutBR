@@ -81,3 +81,13 @@ sources:
             description: Descrição textual do serviço executado. Nulo em ≈20% dos registros.
           - name: status
             description: Status atual da OS — Finalizada, Em Andamento, Aguardando Peças ou Cancelada.
+
+      - name: tipo_manutencao
+        description: Domínio de tipos de manutenção — Corretiva, Preventiva ou Preditiva.
+        columns:
+          - name: id_tipo
+            description: Identificador do tipo de manutenção.
+            tests: [not_null]
+          - name: tipo_manutencao
+            description: Tipo de manutenção (Corretiva, Preventiva, Preditiva).
+            tests: [not_null]
