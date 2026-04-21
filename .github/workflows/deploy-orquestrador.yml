@@ -59,5 +59,6 @@ jobs:
             --entry-point=enqueue \
             --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
             --trigger-event-filters="bucket=${{ secrets.INGESTION_BUCKET }}" \
+            --trigger-location=us \
             --set-env-vars="GCP_PROJECT=${{ secrets.GCP_PROJECT_ID }},TASKS_LOCATION=$GCP_REGION,WORKFLOW_NAME=$WORKFLOW_NAME" \
             --project="${{ secrets.GCP_PROJECT_ID }}"
