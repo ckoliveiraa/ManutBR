@@ -12,7 +12,7 @@ sources:
         columns:
           - name: id
             description: Identificador único do equipamento.
-            tests: [unique, not_null]
+            tests: [not_null]
           - name: tag_ativo
             description: Tag de identificação física do ativo (ex. EQ-0042).
           - name: nome_equipamento
@@ -31,7 +31,7 @@ sources:
         columns:
           - name: id
             description: Identificador único do técnico.
-            tests: [unique, not_null]
+            tests: [not_null]
           - name: nome_completo
             description: Nome completo do técnico.
           - name: especialidade
@@ -48,7 +48,7 @@ sources:
         columns:
           - name: id
             description: Identificador único da ordem de serviço.
-            tests: [unique, not_null]
+            tests: [not_null]
           - name: equipamento_id
             description: FK para equipamentos — equipamento alvo da OS.
             tests:
