@@ -1,0 +1,71 @@
+name: CI (PR)
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ingestion: ${{ steps.filter.outputs.ingestion }}
+      dbt: ${{ steps.filter.outputs.dbt }}
+      orquestrador: ${{ steps.filter.outputs.orquestrador }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ingestion:
+              - 'ingestion/**'
+            dbt:
+              - 'manutbr/**'
+              - 'deploy/**'
+            orquestrador:
+              - 'orquestrador/**'
+
+  lint-python:
+    needs: changes
+    if: needs.changes.outputs.ingestion == 'true' || needs.changes.outputs.orquestrador == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install ruff
+      - run: ruff check ingestion orquestrador
+
+  dbt-parse:
+    needs: changes
+    if: needs.changes.outputs.dbt == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install dbt-bigquery
+      - name: dbt parse
+        working-directory: manutbr
+        env:
+          DBT_PROFILES_DIR: ${{ github.workspace }}/.github/dbt-ci
+          GCP_PROJECT_ID: ci-dummy
+          BQ_DATASET: ci_dummy
+          BQ_LOCATION: US
+          DBT_THREADS: '1'
+        run: dbt parse
+
+  docker-build:
+    needs: changes
+    if: needs.changes.outputs.ingestion == 'true' || needs.changes.outputs.dbt == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build ingestion image (dry)
+        if: needs.changes.outputs.ingestion == 'true'
+        run: docker build -t ingestion-manutbr:pr ingestion
+      - name: Build dbt image (dry)
+        if: needs.changes.outputs.dbt == 'true'
+        run: docker build -f deploy/Dockerfile --build-arg DBT_PROJECT_DIR=ManutBR -t manutbr-dbt:pr .

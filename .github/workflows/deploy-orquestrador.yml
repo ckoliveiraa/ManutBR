@@ -1,0 +1,50 @@
+name: Deploy orquestrador (Workflow + Function)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'orquestrador/**'
+      - '.github/workflows/deploy-orquestrador.yml'
+
+concurrency:
+  group: deploy-orquestrador
+  cancel-in-progress: false
+
+env:
+  GCP_REGION: us-central1
+  WORKFLOW_NAME: manutbr-pipeline
+  FUNCTION_NAME: ingestion-enqueuer
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy Cloud Workflow
+        if: hashFiles('orquestrador/workflow.yaml') != ''
+        run: |
+          gcloud workflows deploy "$WORKFLOW_NAME" \
+            --source=orquestrador/workflow.yaml \
+            --location="$GCP_REGION" \
+            --project="${{ secrets.GCP_PROJECT_ID }}"
+
+      - name: Deploy Cloud Function (enqueuer)
+        run: |
+          gcloud functions deploy "$FUNCTION_NAME" \
+            --gen2 \
+            --runtime=python312 \
+            --region="$GCP_REGION" \
+            --source=orquestrador \
+            --entry-point=enqueue \
+            --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+            --trigger-event-filters="bucket=${{ secrets.INGESTION_BUCKET }}" \
+            --set-env-vars="GCP_PROJECT=${{ secrets.GCP_PROJECT_ID }},TASKS_LOCATION=$GCP_REGION,WORKFLOW_NAME=$WORKFLOW_NAME" \
+            --project="${{ secrets.GCP_PROJECT_ID }}"

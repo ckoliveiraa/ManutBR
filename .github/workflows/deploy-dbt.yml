@@ -1,0 +1,47 @@
+name: Deploy dbt (Cloud Run Job)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'manutbr/**'
+      - 'deploy/**'
+      - '.github/workflows/deploy-dbt.yml'
+
+concurrency:
+  group: deploy-dbt
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Write deploy/.env
+        run: |
+          cat > deploy/.env <<EOF
+          GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
+          BQ_DATASET=${{ vars.BQ_DATASET || 'staging' }}
+          GCP_REGION=us-central1
+          BQ_LOCATION=US
+          DBT_THREADS=8
+          DBT_PROJECT_DIR=ManutBR
+          ARTIFACT_REPO=manutbr
+          IMAGE_NAME=manutbr-dbt
+          JOB_NAME=manutbr-dbt-job
+          SERVICE_ACCOUNT_NAME=dbt-runner
+          EOF
+
+      - name: Run deploy.py
+        run: python deploy/deploy.py --tag "${{ github.sha }}"
